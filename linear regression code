@@ -1,0 +1,69 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+class LinearRegression:
+    def __init__(self):
+        self.coefficients = None
+
+    def fit(self, X, y):
+        # Add bias term to X
+        X = np.c_[np.ones(X.shape[0]), X]
+
+        # Compute the coefficients using least squares
+        self.coefficients = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(y)
+
+    def predict(self, X):
+        # Add bias term to X
+        X = np.c_[np.ones(X.shape[0]), X]
+
+        # Make predictions using the learned coefficients
+        predictions = X.dot(self.coefficients)
+
+        return predictions
+
+    def evaluate(self, X, y):
+        # Add bias term to X
+        X = np.c_[np.ones(X.shape[0]), X]
+
+        # Compute predictions
+        predictions = self.predict(X)
+
+        # Compute mean squared error
+        mse = np.mean((predictions - y) ** 2)
+
+        return mse
+
+    def plot_regression_line(self, X, y):
+        # Add bias term to X
+        X = np.c_[np.ones(X.shape[0]), X]
+
+        # Compute predictions
+        predictions = self.predict(X)
+
+        # Plot the data points and regression line
+        plt.scatter(X[:, 1], y, color='b', label='Actual')
+        plt.plot(X[:, 1], predictions, color='r', label='Regression Line')
+        plt.xlabel('X')
+        plt.ylabel('y')
+        plt.legend()
+        plt.show()
+
+# Usage example
+X = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)
+y = np.array([2, 4, 5, 4, 6])
+
+# Create and fit the linear regression model
+lr = LinearRegression()
+lr.fit(X, y)
+
+# Make predictions on new data points
+new_X = np.array([6, 7, 8]).reshape(-1, 1)
+predictions = lr.predict(new_X)
+print("Predictions:", predictions)
+
+# Evaluate the model
+mse = lr.evaluate(X, y)
+print("Mean Squared Error:", mse)
+
+# Plot the regression line
+lr.plot_regression_line(X, y)
